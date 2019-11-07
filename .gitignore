@@ -1,0 +1,6 @@
+.git
+vim/bundle/*
+vim/tmpfiles/*
+vim/swap/*
+
+
