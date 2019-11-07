@@ -1,0 +1,41 @@
+{
+  "coc": {
+        "preferences":{
+            "currentFunctionSymbolAutoUpdate":"true"
+        } 
+  },
+  "languageserver": {
+    "elmLS": {
+      "command": "elm-language-server",
+      "filetypes": ["elm"],
+      "rootPatterns": ["elm.json"],
+      "initializationOptions": {
+        "elmPath": "elm",
+        "elmFormatPath": "elm-format",
+        "elmTestPath": "elm-test",
+        "elmAnalyseTrigger": "change"
+      }
+    },
+    "elixirLS": {
+      "command": "/home/marc/.vim/3rd/elixir-ls/release/language_server.sh",
+      "filetypes": ["elixir", "eelixir"]
+     },
+     "ccls": {
+      "command": "ccls",
+      "filetypes": ["c", "cpp", "cuda", "objc", "objcpp"],
+      "rootPatterns": [".ccls-root", "compile_commands.json"],
+      "initializationOptions": {
+         "cache": {
+           "directory": ".ccls-cache"
+         }
+       }
+    }
+  },
+  "python" :{
+        "jediEnabled" : false
+
+  },
+  // If you use neovim you can enable codelenses with this
+  "codeLens.enable": true
+}
+
