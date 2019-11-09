@@ -31,6 +31,7 @@ mkdir -p $VIMDIR/spell
 mkdir -p $VIMDIR/swap
 mkdir -p $VIMDIR/tmpfiles
 mkdir -p $VIMDIR/view
+mkdir -p $VIM3RD
 
 ls -l $VIMDIR $VIMRC
 
