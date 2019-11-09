@@ -6,7 +6,7 @@ VIMRC=~/.vimrc
 VIMBUNDLE=$VIMDIR/bundle
 
 if [ -e $VIMDIR ] || [ -e $VIMRC ]; then 
-	echo "Previois Vim configuration already exists."
+	echo "Previous Vim configuration already exists."
 	echo "Delete $VIMRC ? [Y/n]"
 	read answer
 	if [ "$answer" == "y" ] || [ "$answer" == "" ]; then
@@ -23,6 +23,12 @@ fi
 
 ln -s $CURRENT/vim $VIMDIR
 ln -s $CURRENT/vimrc $VIMRC
+
+mkdir -p $VIMDIR/bundle
+mkdir -p $VIMDIR/spell
+mkdir -p $VIMDIR/swap
+mkdir -p $VIMDIR/tmpfiles
+mkdir -p $VIMDIR/view
 
 ls -l $VIMDIR $VIMRC
 
