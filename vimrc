@@ -13,7 +13,7 @@ Plugin 'vim-scripts/c.vim.git'
 Plugin 'ElmCast/elm-vim.git'
 Plugin 'tpope/vim-fugitive.git'
 Plugin 'terryma/vim-multiple-cursors.git'
-Plugin 'vim-scripts/The-NERD-tree.git'
+"Plugin 'vim-scripts/The-NERD-tree.git'
 Plugin 'vim-scripts/OmniCppComplete.git'
 Plugin 'vim-scripts/pep8.git'
 Plugin 'aklt/plantuml-syntax'
@@ -27,6 +27,8 @@ Plugin 'airblade/vim-gitgutter.git'
 Plugin 'justinmk/vim-sneak.git'
 Plugin 'honza/vim-snippets.git'
 Plugin 'neoclide/coc.nvim.git'
+Plugin 'scrooloose/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -243,6 +245,18 @@ let NERDTreeIgnore=[ '\.ncb$', '\.suo$', '\.vcproj\.RIMNET', '\.obj$',
             \ '\.intermediate\.manifest$', '^mt.dep$',
             \ '\.pyc$', '\.o$' ]
 
+" let g:NERDTreeIndicatorMapCustom = {
+"     \ "Modified"  : "✹",
+"     \ "Staged"    : "✚",
+"     \ "Untracked" : "✭",
+"     \ "Renamed"   : "➜",
+"     \ "Unmerged"  : "═",
+"     \ "Deleted"   : "✖",
+"     \ "Dirty"     : "✗",
+"     \ "Clean"     : "✔︎",
+"     \ 'Ignored'   : '☒',
+"     \ "Unknown"   : "?"
+"     \ }
 
 "-----------------------------------------------------------------------------
 " TagBar
