@@ -139,6 +139,8 @@ set foldmethod=syntax
 " don't fold by default
 set nofoldenable
 
+"# w!! to sudo before saving
+cmap w!! w !sudo tee > /dev/null %
 
 """ =====================================================================
 """ = Key Mapping =======================================================
