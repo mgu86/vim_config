@@ -29,6 +29,7 @@ Plugin 'honza/vim-snippets.git'
 Plugin 'neoclide/coc.nvim.git'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'psliwka/vim-smoothie.git'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
