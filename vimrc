@@ -647,6 +647,9 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 "-----------------------------------------------------------------------------
 " Elm
 " "-----------------------------------------------------------------------------
+" Auto formatting on save makes disappear the source file temporarily
+" this blocks elm-live recompilation
+let g:elm_format_autosave = 0  
 
 "-----------------------------------------------------------------------------
 " Elixir
