@@ -30,6 +30,11 @@ Plugin 'neoclide/coc.nvim.git'
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'psliwka/vim-smoothie.git'
+Plugin 'jupyter-vim/jupyter-vim'
+Plugin 'file:///data/dev/picat/vim-picat'
+Plugin 'makerj/vim-pdf.git'
+Plugin 'vimwiki/vimwiki.git'
+Plugin 'liuchengxu/vista.vim.git'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -37,8 +42,8 @@ filetype plugin indent on    " required
 
 let $VIMDIR=$HOME . "/.vim"
 
-"let mapleader = ","
-let mapleader = "ù"
+let mapleader = ","
+"let mapleader = "ù"
 
 set backspace=indent,eol,start
 
@@ -60,12 +65,48 @@ set smarttab
 set expandtab
 set nowrap
 set history=700
+set laststatus=2        " Always display the status line
 " nombre de lignes visibles autours du curseur lors d'un scroll (bas ou haut de page)
 set scrolloff=2
 
 " Completion of the commands with a menu
 set wildmenu
 syntax on
+
+" CoC: Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Make <tab> used for trigger completion, completion confirm, snippet expand and jump like VSCode.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+let g:coc_snippet_next = '<tab>'
+
 
 " Include local (per project) vimrc
 silent! so .vimlocal
@@ -86,8 +127,6 @@ set undofile
 " use * as jokers...
 set path+=**
 
-"let mapleader = ","
-let mapleader = "ù"
 
 " Include local (per project) vimrc
 silent! so .vimlocal
@@ -264,7 +303,7 @@ let NERDTreeIgnore=[ '\.ncb$', '\.suo$', '\.vcproj\.RIMNET', '\.obj$',
 "-----------------------------------------------------------------------------
 " TagBar
 "-----------------------------------------------------------------------------
-nmap <silent><F8> :TagbarToggle<CR>
+" nmap <silent><F8> :TagbarToggle<CR>
 
 "-----------------------------------------------------------------------------
 " Ack
@@ -404,56 +443,59 @@ autocmd FileType vala imap <C-F5> <C-o>:make! exec<CR><CR>
 "-----------------------------------------------------------------------------
 " Python
 "----------------------------------------------------------------------------
+autocmd FileType python vnoremap <F5> :JupyterSendRange<CR>
+autocmd FileType python nnoremap <F5> :JupyterRunFile<CR>
+autocmd FileType python nnoremap <S-F5> :JupyterSendCount<CR>
 
-" map <ctrl>+F12 to generate ctags for current folder:
-autocmd FileType python map <C-F12> :!ctags -R --python-kinds=+i --fields=+iaS --extra=+q .<CR><CR>
-"autocmd FileType python nnoremap <C-F5> :!python %<CR><bar>:cwindow<CR>
-autocmd FileType python nnoremap <F5> :call MGU_exec_capture('python3 -u')<CR>
-autocmd FileType python nnoremap <C-F5> :make! exec<CR><CR>
-
-
-autocmd FileType python setl makeprg=python3\ -u\ '%'
-autocmd FileType python setl shellpipe=2\>&1\|\ tee\ exec_python
-"autocmd FileChangedShell exec_python :edit!<CR> 
-autocmd BufNewFile,BufRead exec_python setl autoread
-
-" * Getting gD ("go to function or class definition") to kinda work
-autocmd FileType python noremap <buffer> gD ?\(def\<bar>class\) <c-r>=expand('<cword>')<cr>\><cr>
-
-function! MGU_exec_capture(exec_prg)
-    silent exec "!xterm -e \"" . a:exec_prg . " '%' 2>&1 | tee exec_python\""
-
-    "make
-
-    "if bufloaded("exec_python") == 0
-    "    setl splitright
-    "    vert split exec_python 
-    "endif
-    cfile exec_python
-    vertical botright copen
-endfunction
-
-function! MGU_exec(exec_prg)
-    silent exec "!xterm -e \"" . a:exec_prg . " '%'\"&"
-
-endfunction
-
-autocmd FileType python set errorformat=\ \ File\ \"%f\"\\,\ line\ %l\\,\ %m,%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
-"autocmd FileType python setl errorformat=
-"	\%A\ \ File\ \"%f\"\\\,\ line\ %l\\\,%m,
-"	\%C\ \ \ \ %.%#,
-"	\%+Z%.%#Error\:\ %.%#,
-"	\%A\ \ File\ \"%f\"\\\,\ line\ %l,
-"	\%+C\ \ %.%#,
-"	\%-C%p^,
-"	\%Z%m,
-"	\%-G%.%#
-
-
-" Wrapping and tabs.
-autocmd FileType python setl tw=78 ts=4 sw=4 sta et sts=4 ai
-
-let g:pyflakes_use_quickfix=0
+"  " map <ctrl>+F12 to generate ctags for current folder:
+"  autocmd FileType python map <C-F12> :!ctags -R --python-kinds=+i --fields=+iaS --extra=+q .<CR><CR>
+"  "autocmd FileType python nnoremap <C-F5> :!python %<CR><bar>:cwindow<CR>
+"  autocmd FileType python nnoremap <F5> :call MGU_exec_capture('python3 -u')<CR>
+"  autocmd FileType python nnoremap <C-F5> :make! exec<CR><CR>
+"  
+"  
+"  autocmd FileType python setl makeprg=python3\ -u\ '%'
+"  autocmd FileType python setl shellpipe=2\>&1\|\ tee\ exec_python
+"  "autocmd FileChangedShell exec_python :edit!<CR> 
+"  autocmd BufNewFile,BufRead exec_python setl autoread
+"  
+"  " * Getting gD ("go to function or class definition") to kinda work
+"  autocmd FileType python noremap <buffer> gD ?\(def\<bar>class\) <c-r>=expand('<cword>')<cr>\><cr>
+"  
+"  function! MGU_exec_capture(exec_prg)
+"      silent exec "!xterm -e \"" . a:exec_prg . " '%' 2>&1 | tee exec_python\""
+"  
+"      "make
+"  
+"      "if bufloaded("exec_python") == 0
+"      "    setl splitright
+"      "    vert split exec_python 
+"      "endif
+"      cfile exec_python
+"      vertical botright copen
+"  endfunction
+"  
+"  function! MGU_exec(exec_prg)
+"      silent exec "!xterm -e \"" . a:exec_prg . " '%'\"&"
+"  
+"  endfunction
+"  
+"  autocmd FileType python set errorformat=\ \ File\ \"%f\"\\,\ line\ %l\\,\ %m,%C\ %.%#,%A\ \ File\ \"%f\"\\,\ line\ %l%.%#,%Z%[%^\ ]%\\@=%m
+"  "autocmd FileType python setl errorformat=
+"  "	\%A\ \ File\ \"%f\"\\\,\ line\ %l\\\,%m,
+"  "	\%C\ \ \ \ %.%#,
+"  "	\%+Z%.%#Error\:\ %.%#,
+"  "	\%A\ \ File\ \"%f\"\\\,\ line\ %l,
+"  "	\%+C\ \ %.%#,
+"  "	\%-C%p^,
+"  "	\%Z%m,
+"  "	\%-G%.%#
+"  
+"  
+"  " Wrapping and tabs.
+"  autocmd FileType python setl tw=78 ts=4 sw=4 sta et sts=4 ai
+"  
+"  let g:pyflakes_use_quickfix=0
 
 "-----------------------------------------------------------------------------
 " Makefile
@@ -516,8 +558,22 @@ autocmd FileType prolog nmap <C-F5> :make! exec<CR><CR>
 " Correcteur orthographique
 "----------------------------------------------------------------------------
 " MGU: too much intrusive, contaminates all the buffersread after
-autocmd BufEnter *.md,*.tex set spell spelllang=fr
-autocmd BufLeave *.md,*.tex set nospell
+autocmd BufEnter *.md,*.tex,*.wiki set spell spelllang=fr
+autocmd BufLeave *.md,*.tex,*.wiki set nospell
+
+
+"-----------------------------------------------------------------------------
+" Vimwiki
+"-----------------------------------------------------------------------------
+let g:tagbar_type_vimwiki = {
+          \   'ctagstype':'vimwiki'
+          \ , 'kinds':['h:header']
+          \ , 'sro':'&&&'
+          \ , 'kind2scope':{'h':'header'}
+          \ , 'sort':0
+          \ , 'ctagsbin':'~/.vim/3rd/vimwiki_tagbar/vwtags.py'
+          \ , 'ctagsargs': 'default'
+          \ }
 
 
 "-----------------------------------------------------------------------------
@@ -642,7 +698,6 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 " Resume latest coc list
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
-
 " Using Coc config
 "-----------------------------------------------------------------------------
 " Elm
@@ -660,3 +715,19 @@ let g:elm_format_autosave = 0
 "
 au CursorHold * sil call CocActionAsync('highlight')
 au CursorHoldI * sil call CocActionAsync('showSignatureHelp')
+
+"-----------------------------------------------------------------------------
+" Vista github.com/liuchengxu/vista.vim
+"-----------------------------------------------------------------------------
+let g:vista_default_executive = 'coc' 
+let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+"let g:vista_icon_indent = ["▸ ", ""]
+let g:vista#renderer#enable_icon = 1
+let g:vista#renderer#icons = {
+\   "function": "\u2131",
+\   "variable": "\uf71b",
+\   "enum": "\u2130",
+\   "struct": "\u222b",
+\  }
+
+nmap <silent><F8> :Vista!!<CR>
