@@ -12,8 +12,9 @@ Plugin 'Rip-Rip/clang_complete'
 Plugin 'vim-scripts/c.vim.git'
 Plugin 'ElmCast/elm-vim.git'
 Plugin 'tpope/vim-fugitive.git'
+Plugin 'idanarye/vim-merginal'
 Plugin 'terryma/vim-multiple-cursors.git'
-"Plugin 'vim-scripts/The-NERD-tree.git'
+Plugin 'preservim/nerdtree.git'
 Plugin 'vim-scripts/OmniCppComplete.git'
 Plugin 'vim-scripts/pep8.git'
 Plugin 'aklt/plantuml-syntax'
@@ -23,15 +24,14 @@ Plugin 'SirVer/ultisnips.git'
 Plugin 'elixir-lang/vim-elixir.git'
 Plugin 'jimenezrick/vimerl.git'
 Plugin 'vim-erlang/vim-erlang-tags.git'
-Plugin 'airblade/vim-gitgutter.git'
+"Plugin 'airblade/vim-gitgutter.git'    " Good, but not really used. And the
+"gutter colume is used by Coc to show warnings and errors
 Plugin 'justinmk/vim-sneak.git'
 Plugin 'honza/vim-snippets.git'
 Plugin 'neoclide/coc.nvim.git'
-Plugin 'scrooloose/nerdtree'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'psliwka/vim-smoothie.git'
 Plugin 'jupyter-vim/jupyter-vim'
-Plugin 'file:///data/dev/picat/vim-picat'
+" Plugin 'file:///data/dev/picat/vim-picat'
 Plugin 'makerj/vim-pdf.git'
 Plugin 'vimwiki/vimwiki.git'
 Plugin 'liuchengxu/vista.vim.git'
@@ -73,12 +73,12 @@ set scrolloff=2
 set wildmenu
 syntax on
 
-" CoC: Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+"    " CoC: Use tab for trigger completion with characters ahead and navigate.
+"    " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+"    inoremap <silent><expr> <TAB>
+"          \ pumvisible() ? "\<C-n>" :
+"          \ <SID>check_back_space() ? "\<TAB>" :
+"          \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
@@ -94,11 +94,11 @@ inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 
 " Make <tab> used for trigger completion, completion confirm, snippet expand and jump like VSCode.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? coc#_select_confirm() :
-      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+"     inoremap <silent><expr> <TAB>
+"           \ pumvisible() ? coc#_select_confirm() :
+"           \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+"           \ <SID>check_back_space() ? "\<TAB>" :
+"           \ coc#refresh()
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -106,7 +106,7 @@ function! s:check_back_space() abort
 endfunction
 
 let g:coc_snippet_next = '<tab>'
-
+let g:coc_disable_startup_warning = 1 
 
 " Include local (per project) vimrc
 silent! so .vimlocal
@@ -138,10 +138,10 @@ if has('gui')
     set guioptions-=T  "remove toolbar
     "set guioptions-=r  "remove right-hand scroll bar
     set guioptions+=b   "horizontal scrollbar
-    "colorscheme graymgu
+    colorscheme graymgu
     "colorscheme github
     "colorscheme summerfruit256
-    colorscheme molokai
+    "colorscheme molokai
 else
     colorscheme default
     "colorscheme graymgu
@@ -232,10 +232,6 @@ endif
 
 map <M-LeftMouse> :ptag <C-R><C-W><CR>
 
-"F4  parcours les fichiers include dans 'path' à la recherche du mot sous le curseur
-"map <F4> [I:let nr = input("Which one: ")<Bar>exe "normal " . nr ."[\t"<CR>
-nmap <F4> :Ack! <CR>
-
 "F3 affiche liste buffers et selectionne celui à afficher
 map <F3> :ls<CR>:let nr = input("Which one: ")<Bar>exe "buffer" . nr <CR>
 map <S-F3> :ls<CR>:let nr = input("Which one: ")<Bar>exe "buffer" . nr <CR>
@@ -255,6 +251,19 @@ nnoremap <S-TAB> <<
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
+"
+" Move line or block of lines from command, insert or visual modes
+" use c-j and c-k
+"
+" Move line or block of lines from command, insert or visual modes
+" use c-j and c-k
+" "
+nnoremap <c-j> :m .+1<CR>==
+nnoremap <c-k> :m .-2<CR>==
+inoremap <c-j> <Esc>:m .+1<CR>==gi
+inoremap <c-k> <Esc>:m .-2<CR>==gi
+vnoremap <c-j> :m '>+1<CR>gv=gv
+vnoremap <c-k> :m '<-2<CR>gv=gv
 
 """ =====================================================================
 """ = Plugins config ====================================================
@@ -303,12 +312,14 @@ let NERDTreeIgnore=[ '\.ncb$', '\.suo$', '\.vcproj\.RIMNET', '\.obj$',
 "-----------------------------------------------------------------------------
 " TagBar
 "-----------------------------------------------------------------------------
-" nmap <silent><F8> :TagbarToggle<CR>
+" By default, Tagbar is used for all the file types.
+nmap <silent><F8> :TagbarToggle<CR>
 
 "-----------------------------------------------------------------------------
 " Ack
 "-----------------------------------------------------------------------------
-let g:ackprg="ack -H --nogroup --nocolor --column --ignore-file=is:tags"
+"let g:ackprg="ack -H --nogroup --nocolor --column --ignore-file=is:tags"
+let g:ackprg="ag --vimgrep"
 "let g:ack_autofold_results=1
 let g:ackpreview=1
 
@@ -384,12 +395,29 @@ set pumheight=15
 
 
 
-
+"-----------------------------------------------------------------------------
+" My Elm SPA
+"----------------------------------------------------------------------------
+function! Page(var1)
+  let pagename=a:var1
+  let pagepath = "src/Pages/" . pagename . "/"
+    :bufdo bdelete
+    exec ":open " . l:pagepath . "View.elm"
+    exec ":vsplit " . l:pagepath . "Update.elm"
+    "exec "windo split"
+    exec ":split " . l:pagepath . "Messages.elm"
+    exec ":wincmd l"
+    exec ":split " . l:pagepath . "Model.elm"
+    exec 2 . "wincmd w"
+    exec "resize +20"
+    exec 4 . "wincmd w"
+    exec "resize +20"
+endfunction
 
 "-----------------------------------------------------------------------------
 " PlantUML
 "----------------------------------------------------------------------------
-autocmd FileType plantuml nmap <F5> :!plantuml % <CR><CR>
+autocmd FileType plantuml nmap <F5> :!plantuml -tsvg % <CR><CR>
 
 "-----------------------------------------------------------------------------
 " c/c++
@@ -664,9 +692,9 @@ omap if <Plug>(coc-funcobj-i)
 omap af <Plug>(coc-funcobj-a)
 
 " Use <tab> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
+"nmap <silent> <TAB> <Plug>(coc-range-select)
+"xmap <silent> <TAB> <Plug>(coc-range-select)
+"xmap <silent> <S-TAB> <Plug>(coc-range-select-backword)
 
 " Use `:Format` to format current buffer
 command! -nargs=0 Format :call CocAction('format')
@@ -705,6 +733,10 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 " Auto formatting on save makes disappear the source file temporarily
 " this blocks elm-live recompilation
 let g:elm_format_autosave = 0  
+let g:elm_detailed_complete = 1
+let g:elm_make_show_warnings = 1
+autocmd FileType elm nmap <F5> :CocList diagnostics<cr>
+
 
 "-----------------------------------------------------------------------------
 " Elixir
@@ -730,4 +762,5 @@ let g:vista#renderer#icons = {
 \   "struct": "\u222b",
 \  }
 
-nmap <silent><F8> :Vista!!<CR>
+" List here all the filetypes which cannot be handled by Tagbar.
+"autocmd FileType elixir nmap <silent><F8> :Vista!!<CR>

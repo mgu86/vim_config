@@ -1,0 +1,21 @@
+extends elm
+# MGU snippets definition for Elm
+
+snippet nfc "functionCall params... + function creation"
+    toto i:${1:#un truc} ${2:un machin}
+    `!vG$1`
+
+endsnippet
+
+snippet t
+    <<<< ${VISUAL:inside} >>>>
+endsnippet
+#if ${2:[[ ${1:condition} ]]}; then
+#        ${0:#statements}
+#fi
+snippet letter
+Dear $1,
+$0
+Yours sincerely,
+$2
+endsnippet

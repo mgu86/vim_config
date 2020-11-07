@@ -42,6 +42,7 @@
             }
         }
     },
-    "codeLens.enable": true
+    "codeLens.enable": true,
+    "coc.preferences.extensionUpdateCheck": "daily"
 }
 
